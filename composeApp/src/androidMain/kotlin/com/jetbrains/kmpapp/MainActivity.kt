@@ -19,16 +19,16 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController = navController, startDestination = "list") {
                 composable("list") {
-                    ListScreen(navigateToDetails = { objectId ->
-                        navController.navigate("details/$objectId")
+                    ListScreen(navigateToDetails = { objectName ->
+                        navController.navigate("details/$objectName")
                     })
                 }
                 composable(
-                    "details/{objectId}",
-                    arguments = listOf(navArgument("objectId") { type = NavType.IntType })
+                    "details/{objectName}",
+                    arguments = listOf(navArgument("objectName") { type = NavType.StringType })
                 ) { backstack ->
                     DetailScreen(
-                        objectId = backstack.arguments?.getInt("objectId")!!,
+                        objectName = backstack.arguments?.getString("objectName")!!,
                         navigateBack = {
                             navController.popBackStack()
                         }

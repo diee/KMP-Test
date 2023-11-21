@@ -4,11 +4,11 @@ import Shared
 
 struct ListView: View {
     let viewModel = ListViewModel(
-        museumRepository: KoinDependencies().museumRepository
+        starWarsRepository: KoinDependencies().starWarsRepository
     )
     
     @State
-    var objects: [MuseumObject] = []
+    var objects: [StarWarsPlanet] = []
     
     let columns = [
         GridItem(.adaptive(minimum: 120), alignment: .top)
@@ -20,8 +20,8 @@ struct ListView: View {
                 NavigationStack {
                     ScrollView {
                         LazyVGrid(columns: columns, alignment: .leading, spacing: 20) {
-                            ForEach(objects, id: \.objectID) { item in
-                                NavigationLink(destination: DetailView(objectId: item.objectID)) {
+                            ForEach(objects, id: \.name) { item in
+                                NavigationLink(destination: DetailView(objectName: item.name)) {
                                     ObjectFrame(obj: item, onClick: {})
                                 }
                                 .buttonStyle(PlainButtonStyle())
@@ -42,39 +42,18 @@ struct ListView: View {
 }
 
 struct ObjectFrame: View {
-    let obj: MuseumObject
+    let obj: StarWarsPlanet
     let onClick: () -> Void
     
     var body: some View {
         VStack(alignment: .leading, spacing: 4) {
-            GeometryReader { geometry in
-                AsyncImage(url: URL(string: obj.primaryImageSmall)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                            .frame(width: geometry.size.width, height: geometry.size.width)
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .frame(width: geometry.size.width, height: geometry.size.width)
-                            .clipped()
-                            .aspectRatio(1, contentMode: .fill)
-                    default:
-                        EmptyView()
-                            .frame(width: geometry.size.width, height: geometry.size.width)
-                    }
-                }
-            }
-            .aspectRatio(1, contentMode: .fit)
-            
-            Text(obj.title)
+            Text(obj.name)
                 .font(.headline)
             
-            Text(obj.artistDisplayName)
+            Text(obj.orbital_period)
                 .font(.subheadline)
             
-            Text(obj.objectDate)
+            Text(obj.gravity)
                 .font(.caption)
         }
     }

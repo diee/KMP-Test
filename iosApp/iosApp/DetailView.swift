@@ -4,13 +4,13 @@ import Shared
 
 struct DetailView: View {
     let viewModel = DetailViewModel(
-        museumRepository: KoinDependencies().museumRepository
+        starWarsRepository: KoinDependencies().starWarsRepository
     )
     
-    let objectId: Int32
+    let objectName: String
     
     @State
-    var object: MuseumObject? = nil
+    var object: StarWarsPlanet? = nil
     
     var body: some View {
         VStack {
@@ -18,7 +18,7 @@ struct DetailView: View {
                 ObjectDetails(obj: obj)
             }
         }.task {
-            for await obj in viewModel.getObject(objectId: objectId) {
+            for await obj in viewModel.getObject(objectString: objectName) {
                 object = obj!
             }
         }
@@ -26,37 +26,16 @@ struct DetailView: View {
 }
 
 struct ObjectDetails: View {
-    var obj: MuseumObject
+    var obj: StarWarsPlanet
     
     var body: some View {
         ScrollView {
             
             VStack {
-                AsyncImage(url: URL(string: obj.primaryImageSmall)) { phase in
-                    switch phase {
-                    case .empty:
-                        ProgressView()
-                    case .success(let image):
-                        image
-                            .resizable()
-                            .scaledToFill()
-                            .clipped()
-                    default:
-                        EmptyView()
-                    }
-                }
                 
                 VStack(alignment: .leading, spacing: 6) {
-                    Text(obj.title)
+                    Text(obj.name)
                         .font(.title)
-                    
-                    LabeledInfo(label: "Artist", data: obj.artistDisplayName)
-                    LabeledInfo(label: "Date", data: obj.objectDate)
-                    LabeledInfo(label: "Dimensions", data: obj.dimensions)
-                    LabeledInfo(label: "Medium", data: obj.medium)
-                    LabeledInfo(label: "Department", data: obj.department)
-                    LabeledInfo(label: "Repository", data: obj.repository)
-                    LabeledInfo(label: "Credits", data: obj.creditLine)
                 }
                 .padding(16)
             }

@@ -1,11 +1,9 @@
 package com.jetbrains.kmpapp.screens
 
 import androidx.compose.animation.AnimatedContent
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
@@ -24,24 +22,22 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
 import com.jetbrains.kmpapp.R
-import com.jetbrains.kmpapp.data.MuseumObject
+import com.jetbrains.kmpapp.data.StarWarsPlanet
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
-fun DetailScreen(objectId: Int, navigateBack: () -> Unit) {
+fun DetailScreen(objectName: String, navigateBack: () -> Unit) {
     val viewModel: DetailViewModel = koinViewModel()
-    val obj by viewModel.getObject(objectId).collectAsState(initial = null)
+    val obj by viewModel.getObject(objectName).collectAsState(initial = null)
 
-    AnimatedContent(obj != null) { objectAvailable ->
+    AnimatedContent(obj != null, label = "") { objectAvailable ->
         if (objectAvailable) {
             ObjectDetails(obj!!, onBackClick = navigateBack)
         } else {
@@ -52,7 +48,7 @@ fun DetailScreen(objectId: Int, navigateBack: () -> Unit) {
 
 @Composable
 private fun ObjectDetails(
-    obj: MuseumObject,
+    obj: StarWarsPlanet,
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -71,26 +67,26 @@ private fun ObjectDetails(
                 .verticalScroll(rememberScrollState())
                 .padding(paddingValues)
         ) {
-            AsyncImage(
+            /*AsyncImage(
                 model = obj.primaryImageSmall,
                 contentDescription = obj.title,
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.LightGray)
-            )
+            )*/
 
             SelectionContainer {
                 Column(Modifier.padding(12.dp)) {
-                    Text(obj.title, style = MaterialTheme.typography.h6)
+                    Text(obj.name, style = MaterialTheme.typography.h6)
                     Spacer(Modifier.height(6.dp))
-                    LabeledInfo(stringResource(R.string.label_artist), obj.artistDisplayName)
+                    /*LabeledInfo(stringResource(R.string.label_artist), obj.artistDisplayName)
                     LabeledInfo(stringResource(R.string.label_date), obj.objectDate)
                     LabeledInfo(stringResource(R.string.label_dimensions), obj.dimensions)
                     LabeledInfo(stringResource(R.string.label_medium), obj.medium)
                     LabeledInfo(stringResource(R.string.label_department), obj.department)
                     LabeledInfo(stringResource(R.string.label_repository), obj.repository)
-                    LabeledInfo(stringResource(R.string.label_credits), obj.creditLine)
+                    LabeledInfo(stringResource(R.string.label_credits), obj.creditLine)*/
                 }
             }
         }
